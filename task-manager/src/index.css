@@ -2,12 +2,12 @@
     /* Primary colours */
     --primary: #2563EB;
     --primary-hover: #1D4ED8;
-    --primary-light: #DBEAFE;
+    --primary-light: #ebf0f7;
 
     /* Backgrounds */
     --background: #07296d;
-    --surface: #0b1336;
-    --surface-secondary: #bdbdc4;
+    --surface: #111b4b;
+    --surface-secondary: #222258;
 
     /* Text */
     --text-primary: #d3dae4;

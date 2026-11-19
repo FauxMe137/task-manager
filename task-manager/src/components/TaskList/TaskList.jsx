@@ -1,57 +1,62 @@
 import './TaskList.css';
 
-function TaskList() {
-  return (
-    <section className="task-list-container">
-      <h2>Your Tasks</h2>
+function TaskList({ tasks, loading, error, onToggleTask, onDeleteTask, onEditTask }) {
+    if (loading) {
+        return <p className="task-list-message">Loading tasks...</p>;
+    }
 
-      <div className="task-list">
-        <article className="task-card">
-          <div className="task-card-content">
-            <div className="task-card-header">
-              <h3>Complete project documentation</h3>
-              <span className="task-priority high">High</span>
-            </div>
+    if (error) {
+        return <p className="task-list-message">{error}</p>;
+    }
 
-            <p>Prepare the documentation for the current project.</p>
+    if (tasks.length === 0) {
+        return <p className="task-list-message">No tasks yet. Add one to get started!</p>;
+    }
 
-            <div className="task-card-details">
-              <span>Due: Nov 25, 2026</span>
-              <span>Pending</span>
-            </div>
-          </div>
+    return (
+        <section className="task-list">
+            {tasks.map(task => (
+                <div className="task-card" key={task.id}>
+                    <h3>{task.title}</h3>
 
-          <div className="task-card-actions">
-            <button type="button">Complete</button>
-            <button type="button">Edit</button>
-            <button type="button">Delete</button>
-          </div>
-        </article>
+                    {task.description && (
+                        <p className="task-description">{task.description}</p>
+                    )}
 
-        <article className="task-card completed">
-          <div className="task-card-content">
-            <div className="task-card-header">
-              <h3>Review JavaScript concepts</h3>
-              <span className="task-priority medium">Medium</span>
-            </div>
+                    <p className="task-priority">
+                        Priority: {task.priority}
+                    </p>
 
-            <p>Revise React components, props and state.</p>
+                    <p className={`task-status ${task.completed ? 'completed' : 'pending'}`}>
+                        {task.completed ? 'Completed' : 'Pending'}
+                    </p>
 
-            <div className="task-card-details">
-              <span>Due: Nov 18, 2026</span>
-              <span>Completed</span>
-            </div>
-          </div>
+                    <div className="task-actions">
+                        <button
+                            className="complete-btn"
+                            onClick={() => onToggleTask(task)}
+                        >
+                            {task.completed ? 'Undo' : 'Complete'}
+                        </button>
 
-          <div className="task-card-actions">
-            <button type="button">Undo</button>
-            <button type="button">Edit</button>
-            <button type="button">Delete</button>
-          </div>
-        </article>
-      </div>
-    </section>
-  );
+                        <button
+                            className="edit-btn"
+                            onClick={() => onEditTask(task)}
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            className="delete-btn"
+                            onClick={() => onDeleteTask(task.id)}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </section>
+    );
 }
 
 export default TaskList;

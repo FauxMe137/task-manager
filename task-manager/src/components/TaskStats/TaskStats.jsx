@@ -1,24 +1,26 @@
 import './TaskStats.css';
 
-function TaskStats({ total, completed, pending }) {
+function TaskStats({ tasks }) {
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    const pending = total - completed;
+
     return (
         <section className="task-stats">
-
             <div className="stat-card">
-                <span>Total Tasks</span>
-                <h2>{total}</h2>
+                <h3>Total Tasks</h3>
+                <p>{total}</p>
             </div>
 
             <div className="stat-card">
-                <span>Completed</span>
-                <h2>{completed}</h2>
+                <h3>Completed</h3>
+                <p>{completed}</p>
             </div>
 
             <div className="stat-card">
-                <span>Pending</span>
-                <h2>{pending}</h2>
+                <h3>Pending</h3>
+                <p>{pending}</p>
             </div>
-
         </section>
     );
 }

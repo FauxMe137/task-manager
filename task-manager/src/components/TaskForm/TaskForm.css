@@ -71,6 +71,21 @@
     background-color: var(--primary-hover);
 }
 
+.cancel-task-button {
+    align-self: flex-start;
+    padding: 11px 20px;
+    background-color: var(--danger);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.cancel-task-button:hover {
+    background-color: #B91C1C;
+}
+
 @media (max-width: 500px) {
     .form-row {
         flex-direction: column;
