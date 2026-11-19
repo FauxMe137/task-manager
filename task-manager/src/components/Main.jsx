@@ -2,7 +2,7 @@ import TaskStats from './TaskStats/TaskStats';
 import TaskForm from './TaskForm/TaskForm';
 import TaskList from './TaskList/TaskList';
 
-function Main({ tasks, loading, error, onAddTask, onToggleTask, onDeleteTask, onEditTask, onUpdateTask, editingTask, setEditingTask }) {
+function Main({ tasks, filteredTasks, loading, error, onAddTask, onToggleTask, onDeleteTask, onEditTask, onUpdateTask, editingTask, setEditingTask }) {
     return (
         <main style={{
             width: '100%',
@@ -16,7 +16,7 @@ function Main({ tasks, loading, error, onAddTask, onToggleTask, onDeleteTask, on
             <TaskStats tasks={tasks} />
 
             <TaskForm onAddTask={onAddTask} onUpdateTask={onUpdateTask} editingTask={editingTask} onCancelEdit={() => setEditingTask(null)} />
-            <TaskList tasks={tasks} loading={loading} error={error} onToggleTask={onToggleTask} onDeleteTask={onDeleteTask} onEditTask={onEditTask} />
+            <TaskList tasks={filteredTasks} totalTasks={tasks.length} loading={loading} error={error} onToggleTask={onToggleTask} onDeleteTask={onDeleteTask} onEditTask={onEditTask} />
         </main>
     );
 }

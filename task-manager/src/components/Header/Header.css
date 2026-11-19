@@ -71,3 +71,23 @@
 .filter-button:hover {
     background-color: #BFDBFE;
 }
+
+.filter-options {
+    display: flex;
+    gap: 10px;
+    padding: 12px 0;
+}
+
+.filter-options select {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+}
+
+@media (max-width: 500px) {
+    .filter-options {
+        flex-direction: column;
+    }
+}

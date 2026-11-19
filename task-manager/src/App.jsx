@@ -9,10 +9,26 @@ export default function App(){
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingTask, setEditingTask] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
 
-  const handleFilterClick = () => {
-    console.log('Filter button clicked.');
-  };
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch =
+        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (task.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'completed' && task.completed) ||
+        (statusFilter === 'pending' && !task.completed);
+
+    const matchesPriority =
+        priorityFilter === 'all' ||
+        task.priority.toLowerCase() === priorityFilter;
+
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
 
   async function addTask(newTask) {
     const response = await fetch('http://localhost:3000/tasks', {
@@ -123,8 +139,8 @@ export default function App(){
 
   return (
     <div className="App">
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onFilterClick={handleFilterClick} />
-      <Main tasks={tasks} loading={loading} error={error} onAddTask={addTask} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onUpdateTask={updateTask} editingTask={editingTask} setEditingTask={setEditingTask} />
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onFilterClick={() => setShowFilters(prev => !prev)} statusFilter={statusFilter} onStatusChange={setStatusFilter} priorityFilter={priorityFilter} onPriorityChange={setPriorityFilter} showFilters={showFilters} />
+      <Main tasks={tasks} filteredTasks={filteredTasks} loading={loading} error={error} onAddTask={addTask} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onUpdateTask={updateTask} editingTask={editingTask} setEditingTask={setEditingTask} />
       <Footer />
     </div>
   );

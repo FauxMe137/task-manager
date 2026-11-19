@@ -1,6 +1,6 @@
 import './TaskList.css';
 
-function TaskList({ tasks, loading, error, onToggleTask, onDeleteTask, onEditTask }) {
+function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTask, onEditTask }) {
     if (loading) {
         return <p className="task-list-message">Loading tasks...</p>;
     }
@@ -10,7 +10,9 @@ function TaskList({ tasks, loading, error, onToggleTask, onDeleteTask, onEditTas
     }
 
     if (tasks.length === 0) {
-        return <p className="task-list-message">No tasks yet. Add one to get started!</p>;
+        return <p className="task-list-message">
+          {totalTasks === 0 ? 'No tasks yet. Add one to get started!' : 'No tasks match your search or filter criteria. Try changing your search or filters.'}
+        </p>;
     }
 
     return (
