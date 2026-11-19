@@ -1,0 +1,62 @@
+:root {
+    /* Primary colours */
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+
+    /* Backgrounds */
+    --background: #07296d;
+    --surface: #0b1336;
+    --surface-secondary: #bdbdc4;
+
+    /* Text */
+    --text-primary: #d3dae4;
+    --text-secondary: #6B7280;
+
+    /* Other colours */
+    --border: #D1D5DB;
+    --success: #16A34A;
+    --danger: #DC2626;
+
+    /* Layout */
+    --page-width: 1200px;
+    --page-padding: 20px;
+
+    /* Dimensions */
+    --border-radius: 10px;
+
+    /* Typography */
+    --font-family: Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#root {
+    min-height: 100vh;
+}

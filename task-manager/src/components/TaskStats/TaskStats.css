@@ -1,0 +1,29 @@
+.task-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.stat-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 20px;
+}
+
+.stat-card span {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    margin-top: 8px;
+    font-size: 28px;
+    color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+    .task-stats {
+        grid-template-columns: 1fr;
+    }
+}
