@@ -3,7 +3,7 @@ import cors from 'cors';
 import Database from 'better-sqlite3';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Database connection
 const db = new Database('./server/database/tasks.db');
@@ -176,6 +176,6 @@ app.delete('/tasks/:id', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
