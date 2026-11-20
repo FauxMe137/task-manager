@@ -6,9 +6,14 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
     const [description, setDescription] = useState(editingTask?.description || '');
     const [priority, setPriority] = useState(editingTask?.priority || 'Medium');
     const [dueDate, setDueDate] = useState(editingTask?.due_date || '');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function handleSubmit(e) {
     e.preventDefault();
+    
+    if(isSubmitting) return;
+
+    setIsSubmitting(true);
 
     const taskData = {
         title,
@@ -30,6 +35,8 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
         setDueDate('');
     } catch (error) {
         console.error(error);
+    } finally {
+        setIsSubmitting(false);
     }
 }
 
@@ -61,6 +68,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
                         required
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        maxLength={100}
                     />
                 </div>
 
@@ -71,6 +79,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
                         rows="3"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        maxLength={500}
                     />
                 </div>
 
@@ -96,12 +105,12 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
 
                 </div>
 
-                <button type="submit" className="add-task-button">
-                    {editingTask ? 'Save Changes' : 'Add Task'}
+                <button type="submit" disabled={isSubmitting} className="add-task-button">
+                    {isSubmitting ? 'Saving...' : editingTask ? 'Save Changes' : 'Add Task'}
                 </button>
 
                 {editingTask && (
-                    <button type="button" className='cancel-task-button' onClick={onCancelEdit}>
+                    <button type="button" className='cancel-task-button' onClick={onCancelEdit} disabled={isSubmitting}>
                         Cancel
                     </button>
 )}

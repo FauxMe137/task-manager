@@ -77,6 +77,11 @@
     opacity: 0.8;
 }
 
+.task-actions button:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .task-list-message {
     text-align: center;
     padding: 30px 15px;

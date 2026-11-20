@@ -26,6 +26,54 @@ db.exec(`
 app.use(cors());
 app.use(express.json());
 
+// Helper functions
+function validateTask(task) {
+    const { title, description, priority, due_date } = task;
+
+    if (typeof title !== 'string' || !title.trim()) {
+        return 'Task title is required';
+    }
+
+    if (title.trim().length > 100) {
+        return 'Title cannot exceed 100 characters';
+    }
+
+    if (description && typeof description !== 'string') {
+        return 'Description must be text';
+    }
+
+    if (description && description.length > 500) {
+        return 'Description cannot exceed 500 characters';
+    }
+
+    if (priority && !['Low', 'Medium', 'High'].includes(priority)) {
+        return 'Invalid priority';
+    }
+
+    if (due_date && !isValidDate(due_date)) {
+        return 'Invalid due date';
+    }
+
+    return null;
+}
+
+function isValidDate(date) {
+    if (typeof date !== 'string') {
+        return false;
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return false;
+    }
+
+    const parsedDate = new Date(`${date}T00:00:00Z`);
+
+    return (
+        !isNaN(parsedDate.getTime()) &&
+        parsedDate.toISOString().slice(0, 10) === date
+    );
+}
+
 // API Routes
 app.get('/tasks', (req, res) => {
     const tasks = db.prepare(`
@@ -54,16 +102,16 @@ app.get('/tasks/:id', (req, res) => {
 app.post('/tasks', (req, res) => {
     const { title, description, priority, due_date } = req.body;
 
-    if (!title) {
-        return res.status(400).json({
-            error: 'Task title is required'
-        });
+    const error = validateTask(req.body);
+
+    if (error) {
+        return res.status(400).json({ error });
     }
 
     const result = db.prepare(`
         INSERT INTO tasks (title, description, priority, due_date)
         VALUES (?, ?, ?, ?)
-    `).run(title, description, priority, due_date);
+    `).run(title.trim(), description, priority || 'Medium', due_date);
 
     const newTask = db.prepare(`
         SELECT * FROM tasks WHERE id = ?
@@ -74,6 +122,18 @@ app.post('/tasks', (req, res) => {
 
 app.put('/tasks/:id', (req, res) => {
     const { title, description, priority, due_date, completed } = req.body;
+
+    const error = validateTask(req.body);
+
+    if (error) {
+        return res.status(400).json({ error });
+    }
+
+    if (![0, 1].includes(completed)) {
+        return res.status(400).json({
+            error: 'Invalid completion status'
+        });
+    }
 
     const result = db.prepare(`
         UPDATE tasks

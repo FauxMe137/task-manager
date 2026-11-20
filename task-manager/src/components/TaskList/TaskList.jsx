@@ -1,6 +1,34 @@
 import './TaskList.css';
+import {useState} from 'react';
 
 function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTask, onEditTask }) {
+    const [loadingTaskId, setLoadingTaskId] = useState(null);
+    const [loadingAction, setLoadingAction] = useState('');
+
+    async function handleToggle(task) {
+        setLoadingTaskId(task.id);
+        setLoadingAction('toggle');
+
+        try {
+            await onToggleTask(task);
+        } finally {
+            setLoadingTaskId(null);
+            setLoadingAction('');
+        }
+    }
+
+    async function handleDelete(id) {
+        setLoadingTaskId(id);
+        setLoadingAction('delete');
+
+        try {
+            await onDeleteTask(id);
+        } finally {
+            setLoadingTaskId(null);
+            setLoadingAction('');
+        }
+    }
+    
     if (loading) {
         return <p className="task-list-message">Loading tasks...</p>;
     }
@@ -36,9 +64,14 @@ function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTas
                     <div className="task-actions">
                         <button
                             className="complete-btn"
-                            onClick={() => onToggleTask(task)}
+                            onClick={() => handleToggle(task)}
+                            disabled={loadingTaskId === task.id}
                         >
-                            {task.completed ? 'Undo' : 'Complete'}
+                            {loadingTaskId === task.id && loadingAction === 'toggle'
+                                ? 'Updating...'
+                                : task.completed
+                                    ? 'Undo'
+                                    : 'Complete'}
                         </button>
 
                         <button
@@ -50,9 +83,12 @@ function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTas
 
                         <button
                             className="delete-btn"
-                            onClick={() => onDeleteTask(task.id)}
+                            onClick={() => handleDelete(task.id)}
+                            disabled={loadingTaskId === task.id}
                         >
-                            Delete
+                            {loadingTaskId === task.id && loadingAction === 'delete'
+                                ? 'Deleting...'
+                                : 'Delete'}
                         </button>
                     </div>
                 </div>

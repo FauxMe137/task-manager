@@ -12,6 +12,7 @@ export default function App(){
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [actionError, setActionError] = useState('');
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch =
@@ -31,58 +32,85 @@ export default function App(){
   });
 
   async function addTask(newTask) {
-    const response = await fetch('http://localhost:3000/tasks', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newTask)
-    });
+    setActionError('');
 
-    if (!response.ok) {
-        throw new Error('Failed to add task');
+    try {
+        const response = await fetch('http://localhost:3000/tasks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to add task');
+        }
+
+        setTasks(prevTasks => [data, ...prevTasks]);
+    } catch (error) {
+        setActionError(error.message);
+        throw error;
     }
-
-    const createdTask = await response.json();
-
-    setTasks(prevTasks => [createdTask, ...prevTasks]);
   }
 
   async function toggleTask(task) {
+    setActionError('');
+
     const updatedTask = {
         ...task,
         completed: task.completed ? 0 : 1
     };
 
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedTask)
-    });
+    try {
+        const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedTask)
+        });
 
-    if (!response.ok) {
-        throw new Error('Failed to update task');
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to update task');
+        }
+
+        setTasks(prevTasks =>
+            prevTasks.map(t => t.id === task.id ? data : t)
+        );
+    } catch (error) {
+        setActionError(error.message);
     }
-
-    const data = await response.json();
-
-    setTasks(prevTasks =>
-        prevTasks.map(t => t.id === task.id ? data : t)
-    );
   }
 
   async function deleteTask(id) {
-    const response = await fetch(`http://localhost:3000/tasks/${id}`, {
-        method: 'DELETE'
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to delete task');
+    if(!window.confirm('Are you sure you want to delete this task?')) {
+        return;
     }
+    
+    setActionError('');
 
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+    try {
+        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to delete task');
+        }
+
+        setTasks(prevTasks =>
+            prevTasks.filter(task => task.id !== id)
+        );
+    } catch (error) {
+        setActionError(error.message);
+    }
   }
 
   async function editTask(task) {
@@ -90,31 +118,38 @@ export default function App(){
   }
 
   async function updateTask(id, taskData) {
+    setActionError('');
+
     const updatedTask = {
         ...tasks.find(task => task.id === id),
         ...taskData
     };
 
-    const response = await fetch(`http://localhost:3000/tasks/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedTask)
-    });
+    try {
+        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedTask)
+        });
 
-    if (!response.ok) {
-        throw new Error('Failed to update task');
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to update task');
+        }
+
+        setTasks(prevTasks =>
+            prevTasks.map(task => task.id === id ? data : task)
+        );
+
+        setEditingTask(null);
+    } catch (error) {
+        setActionError(error.message);
+        throw error;
     }
-
-    const data = await response.json();
-
-    setTasks(prevTasks =>
-        prevTasks.map(task => task.id === id ? data : task)
-    );
-
-    setEditingTask(null);
-}
+  }
 
   useEffect(() => {
     async function fetchTasks() {
@@ -140,7 +175,7 @@ export default function App(){
   return (
     <div className="App">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onFilterClick={() => setShowFilters(prev => !prev)} statusFilter={statusFilter} onStatusChange={setStatusFilter} priorityFilter={priorityFilter} onPriorityChange={setPriorityFilter} showFilters={showFilters} />
-      <Main tasks={tasks} filteredTasks={filteredTasks} loading={loading} error={error} onAddTask={addTask} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onUpdateTask={updateTask} editingTask={editingTask} setEditingTask={setEditingTask} />
+      <Main actionError={actionError} tasks={tasks} filteredTasks={filteredTasks} loading={loading} error={error} onAddTask={addTask} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onUpdateTask={updateTask} editingTask={editingTask} setEditingTask={setEditingTask} />
       <Footer />
     </div>
   );
