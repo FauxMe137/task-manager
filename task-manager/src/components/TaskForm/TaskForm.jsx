@@ -64,6 +64,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
                     <label htmlFor="task-title">Title</label>
                     <input
                         type="text"
+                        id="task-title"
                         placeholder="What needs to be done?"
                         required
                         value={title}
@@ -75,12 +76,17 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
                 <div className="form-group">
                     <label htmlFor="task-description">Description</label>
                     <textarea
-                        placeholder="Add some details (optional)"
-                        rows="3"
+                        className="task-description-input"
+                        maxLength={500}
+                        id="task-description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        maxLength={500}
+                        placeholder="Add more details about this task..."
                     />
+
+                    <small className="character-count">
+                        {description.length}/500
+                    </small>
                 </div>
 
                 <div className="form-row">

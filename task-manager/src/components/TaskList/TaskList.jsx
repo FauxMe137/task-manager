@@ -45,15 +45,33 @@ function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTas
 
     return (
         <section className="task-list">
-            {tasks.map(task => (
-                <div className="task-card" key={task.id}>
+            {tasks.map(task => {
+                const isOverdue =
+                    task.due_date &&
+                    !task.completed &&
+                    new Date(`${task.due_date}T00:00:00`) < new Date(new Date().toDateString());
+
+                return (
+                <div className={`task-card ${task.completed ? 'completed-card' : ''}`} key={task.id}>
                     <h3>{task.title}</h3>
 
                     {task.description && (
                         <p className="task-description">{task.description}</p>
                     )}
 
-                    <p className="task-priority">
+                    {task.due_date && (
+                        <p className={`task-due-date ${isOverdue ? 'overdue' : ''}`}>
+                            {isOverdue ? 'Overdue:' : 'Due:'}
+
+                            {new Date(`${task.due_date}T00:00:00`).toLocaleDateString                  ('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </p>
+                    )}
+
+                    <p className={`task-priority ${task.priority.toLowerCase()}`}>
                         Priority: {task.priority}
                     </p>
 
@@ -92,7 +110,7 @@ function TaskList({ tasks, totalTasks, loading, error, onToggleTask, onDeleteTas
                         </button>
                     </div>
                 </div>
-            ))}
+            )})}
         </section>
     );
 }

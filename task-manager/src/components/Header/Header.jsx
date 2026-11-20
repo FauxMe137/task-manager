@@ -1,6 +1,8 @@
 import './Header.css';
 
 function Header({ searchQuery, onSearchChange, onFilterClick, statusFilter, onStatusChange, priorityFilter, onPriorityChange, showFilters }) {
+    const filtersActive = statusFilter !== 'all' || priorityFilter !== 'all';
+    
     return (
         <header className="header">
             <div className="header-container">
@@ -18,10 +20,20 @@ function Header({ searchQuery, onSearchChange, onFilterClick, statusFilter, onSt
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
                         />
+
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                className="clear-search"
+                                onClick={() => onSearchChange('')}
+                            >
+                                &times;
+                            </button>
+                        )}
                     </div>
 
                     <button
-                        className="filter-button"
+                        className={`filter-button ${filtersActive ? 'active' : ''}`}
                         onClick={onFilterClick}
                         aria-label="Open filters"
                         title="Filter tasks"
@@ -51,6 +63,18 @@ function Header({ searchQuery, onSearchChange, onFilterClick, statusFilter, onSt
                                 <option value="medium">Medium Priority</option>
                                 <option value="high">High Priority</option>
                             </select>
+
+                            {filtersActive && (
+                                <button
+                                    className="clear-filters"
+                                    onClick={() => {
+                                        onStatusChange('all');
+                                        onPriorityChange('all');
+                                    }}
+                                >
+                                    Clear filters
+                                </button>
+                            )}
                         </div>
                     )}
 

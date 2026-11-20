@@ -30,8 +30,15 @@
     gap: 12px;
 }
 
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .search-container input {
-    width: 260px;
+    width: 100%;
+    padding-right: 35px;
     padding: 10px 14px;
 
     background-color: var(--background);
@@ -49,6 +56,20 @@
 
 .search-container input::placeholder {
     color: var(--text-secondary);
+}
+
+.clear-search {
+    position: absolute;
+    right: 17px;
+    background-color: inherit;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    line-height: 1;
+}
+
+.clear-search:hover {
+    color: var(--text-primary);
 }
 
 .filter-button {
@@ -70,6 +91,25 @@
 
 .filter-button:hover {
     background-color: #BFDBFE;
+}
+
+.filter-button.active {
+    background-color: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.clear-filters {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--surface-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.clear-filters:hover {
+    opacity: 0.8;
 }
 
 .filter-options {

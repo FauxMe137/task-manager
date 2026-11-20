@@ -45,6 +45,7 @@
 .form-group textarea:focus,
 .form-group select:focus {
     border-color: var(--primary);
+    background-color: var(--background);
 }
 
 .form-group textarea {
@@ -84,6 +85,32 @@
 
 .cancel-task-button:hover {
     background-color: #B91C1C;
+}
+
+.task-description-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    resize: none;
+    font-family: inherit;
+    line-height: 1.5;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+}
+
+.task-description-input:focus {
+    outline: 2px solid var(--primary-light);
+    border-color: var(--primary);
+}
+
+.character-count {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
 }
 
 @media (max-width: 500px) {

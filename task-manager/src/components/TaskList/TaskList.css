@@ -19,15 +19,52 @@
     color: var(--text-primary);
 }
 
+.task-card.completed-card {
+    opacity: 0.7;
+}
+
+.task-card.completed-card h3 {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
 .task-description {
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.5;
 }
 
+.task-due-date {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.task-due-date.overdue {
+    color: var(--danger);
+    font-weight: 600;
+}
+
 .task-priority {
     font-size: 13px;
     font-weight: 600;
+    width: fit-content;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.task-priority.high {
+    background-color: #d8b3b3;
+    color: #DC2626;
+}
+
+.task-priority.medium {
+    background-color: #cfc394;
+    color: #D97706;
+}
+
+.task-priority.low {
+    background-color: #b7ddc4;
+    color: #16A34A;
 }
 
 .task-status {
