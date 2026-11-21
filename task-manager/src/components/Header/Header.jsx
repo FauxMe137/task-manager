@@ -19,6 +19,7 @@ function Header({ searchQuery, onSearchChange, onFilterClick, statusFilter, onSt
                             placeholder="Search tasks..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
+                            id="search-input"
                         />
 
                         {searchQuery && (
@@ -48,6 +49,7 @@ function Header({ searchQuery, onSearchChange, onFilterClick, statusFilter, onSt
                             <select
                                 value={statusFilter}
                                 onChange={(e) => onStatusChange(e.target.value)}
+                                id="task-status"
                             >
                                 <option value="all">All Statuses</option>
                                 <option value="pending">Pending</option>

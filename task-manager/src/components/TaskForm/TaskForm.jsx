@@ -58,7 +58,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
 
             <h2>Add a Task</h2>
 
-            <form className="task-form" onSubmit={handleSubmit}>
+            <form className="task-form" id='task-form' onSubmit={handleSubmit}>
 
                 <div className="form-group">
                     <label htmlFor="task-title">Title</label>
@@ -93,7 +93,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
 
                     <div className="form-group">
                         <label htmlFor="task-priority">Priority</label>
-                        <select value={priority} defaultValue="Medium" onChange={(e) => setPriority(e.target.value)}>
+                        <select value={priority} id="task-priority" onChange={(e) => setPriority(e.target.value)}>
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
@@ -105,6 +105,7 @@ function TaskForm({ onAddTask, editingTask, onUpdateTask, onCancelEdit }) {
                         <input
                             type="date"
                             value={dueDate}
+                            id="task-due-date"
                             onChange={(e) => setDueDate(e.target.value)}
                         />
                     </div>

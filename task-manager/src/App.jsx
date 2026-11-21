@@ -5,7 +5,18 @@ import {useState, useEffect} from 'react';
 
 export default function App(){
   const [searchQuery, setSearchQuery] = useState('');
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    try {
+        return JSON.parse(localStorage.getItem('tasks')) || [];
+    } catch (error) {
+        console.error('Error parsing tasks from localStorage:', error);
+        return [];
+    }
+  });
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const [hasLoadedTasks, setHasLoadedTasks] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingTask, setEditingTask] = useState(null);
@@ -35,7 +46,7 @@ export default function App(){
     setActionError('');
 
     try {
-        const response = await fetch('http://localhost:3000/tasks', {
+        const response = await fetch(`${API_URL}/tasks`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -65,7 +76,7 @@ export default function App(){
     };
 
     try {
-        const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+        const response = await fetch(`${API_URL}/tasks/${task.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,7 +106,7 @@ export default function App(){
     setActionError('');
 
     try {
-        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+        const response = await fetch(`${API_URL}/tasks/${id}`, {
             method: 'DELETE'
         });
 
@@ -126,7 +137,7 @@ export default function App(){
     };
 
     try {
-        const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+        const response = await fetch(`${API_URL}/tasks/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -154,7 +165,7 @@ export default function App(){
   useEffect(() => {
     async function fetchTasks() {
       try {
-          const response = await fetch('http://localhost:3000/tasks');
+          const response = await fetch(`${API_URL}/tasks`);
 
           if (!response.ok) {
             throw new Error('Failed to fetch tasks');
@@ -166,16 +177,26 @@ export default function App(){
         setError(error.message);
       } finally {
         setLoading(false);
+        setHasLoadedTasks(true);
       }
     }
     
     fetchTasks();
-  }, []);
+  }, [API_URL]);
+
+  useEffect(() => {
+    if (hasLoadedTasks) {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+  }, [tasks, hasLoadedTasks]);
 
   return (
     <div className="App">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onFilterClick={() => setShowFilters(prev => !prev)} statusFilter={statusFilter} onStatusChange={setStatusFilter} priorityFilter={priorityFilter} onPriorityChange={setPriorityFilter} showFilters={showFilters} />
+
       <Main actionError={actionError} tasks={tasks} filteredTasks={filteredTasks} loading={loading} error={error} onAddTask={addTask} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onUpdateTask={updateTask} editingTask={editingTask} setEditingTask={setEditingTask} />
+
       <Footer />
     </div>
   );
